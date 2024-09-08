@@ -1,0 +1,379 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<main class="main">
+  <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+    <div class="container d-flex align-items-center">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">Products</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Default</li>
+      </ol>
+    </div><!-- End .container -->
+  </nav><!-- End .breadcrumb-nav -->
+
+  <div class="page-content">
+    <div class="container">
+      <div class="product-details-top">
+        <div class="row">
+          <style>
+            .product-gallery {
+              background: #fff;
+              height: 270px;
+              width: 570px;
+              display: flex;
+              box-shadow: 0 0px 0px rgba(0, 0, 0, 0.3);
+            }
+
+            .video-list {
+              width: 20%;
+              height: 100%;
+              padding: 10px;
+              padding-right: 0;
+              overflow-y: scroll;
+            }
+
+            .video-list video {
+              width: 100%;
+              object-fit: cover;
+              height: 105px;
+              padding: 10px;
+              cursor: pointer;
+            }
+
+            .video-list video.active,
+            .video-list video:hover {
+              background: #f1c40f;
+              box-shadow: 0 0 0 4px #333 inset;
+            }
+
+            .main-video {
+              width: 80%;
+              padding: 10px;
+            }
+
+            .main-video video {
+              width: 100%;
+              height: 100%;
+              outline: none;
+              padding: 10px;
+              background: #f1c40f;
+              box-shadow: 0 0 0 4px #333 inset;
+            }
+          </style>
+
+          <div class="col-md-6">
+            <div class="container" id="toolContainer">
+              {% for image in images %}
+              <div class="tool">
+                {% if image.file_type == 'image' %}
+                <i class="fas fa-file-image"></i>
+                <div class="preview-container">
+                  <img src="{{ image.images.url }}" alt="{{ image.images.name }}"
+                    onerror="this.onerror=null;this.parentElement.innerHTML+='<p class=\'file-error\'>Error loading image</p>';">
+                </div>
+                {% elif image.file_type == 'video' %}
+                <i class="fas fa-file-video"></i>
+                <div class="preview-container">
+                  <video controls>
+                    <source src="{{ image.images.url }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+                {% elif image.file_type == 'audio' %}
+                <i class="fas fa-file-audio"></i>
+                <audio controls>
+                  <source src="{{ image.images.url }}" type="audio/mpeg">
+                  Your browser does not support the audio element.
+                </audio>
+                {% elif image.file_type == 'pdf' %}
+                <i class="fas fa-file-pdf"></i>
+                <div class="preview-container">
+                  <iframe src="{{ image.images.url }}" width="100%" height="100%"></iframe>
+                </div>
+                {% elif image.file_type == 'word' %}
+                <i class="fas fa-file-word"></i>
+                {% elif image.file_type == 'excel' %}
+                <i class="fas fa-file-excel"></i>
+                {% elif image.file_type == 'powerpoint' %}
+                <i class="fas fa-file-powerpoint"></i>
+                {% else %}
+                <i class="fas fa-file"></i>
+                {% endif %}
+                <h6>{{ image.images.name }}</h6>
+                <a href="{{ image.images.url }}" class="download-link" download>Download</a>
+              </div>
+              {% empty %}
+              <p>No files available.</p>
+              {% endfor %}
+            </div>
+
+            <nav class="product-pager ml-auto" aria-label="Product">
+              <a class="product-pager-link product-pager-prev" href="#" aria-label="Previous" tabindex="-1">
+                <i class="icon-angle-left"></i>
+                <span>Prev</span>
+              </a>
+
+              <a class="product-pager-link product-pager-next" href="#" aria-label="Next" tabindex="-1">
+                <span>Next</span>
+                <i class="icon-angle-right"></i>
+              </a>
+            </nav><!-- End .pager-nav -->
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script>
+              $(document).ready(function () {
+                $('.video-list video').click(function () {
+                  // Remove 'active' class from all videos and add it to the clicked one
+                  $(this).addClass('active').siblings().removeClass('active');
+                  // Get the source of the clicked video
+                  let src = $(this).attr('src');
+                  // Set the source of the main video to the clicked video
+                  $('.main-video video').attr('src', src);
+                });
+              });
+            </script>
+          </div><!-- End .col-md-6 -->
+
+          <div class="col-md-6">
+            <div class="product-details">
+              <h1 class="product-title">Dark yellow lace cut out swing dress</h1>
+              <!-- End .product-title -->
+
+              <div class="ratings-container">
+                <div class="ratings">
+                  <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
+                </div><!-- End .ratings -->
+                <a class="ratings-text" href="#product-review-link" id="review-link">( 2 Reviews )</a>
+              </div><!-- End .rating-container -->
+
+              <div class="product-price">
+                $84.00
+              </div><!-- End .product-price -->
+
+              <div class="product-content">
+                <p>Sed egestas, ante et vulputate volutpat, eros pede semper est, vitae luctus metus
+                  libero eu augue. Morbi purus libero, faucibus adipiscing. Sed lectus. </p>
+              </div><!-- End .product-content -->
+
+              <br>
+              <br>
+              <div class="input-group my-3" style="width:30%;">
+                <input type="number" value="1" class="form-control product-qty-{{data.id}}" id="productQty" />
+                <div class="input-group-append">
+                  <input type="hidden" class="product-image-{{data.id}}" value="{{data.image}}" />
+                  <input type="hidden" class="product-id-{{data.id}}" value="{{data.id}}" />
+                  <input type="hidden" class="product-title-{{data.id}}" value="{{data.title}}" />
+                  <input type="hidden" class="product-price-{{ product.id }}" value="{{ data.price }}" />
+                  <button class="btn btn-primary btn-sm add-to-cart" data-index="{{data.id}}" type="button"
+                    id="addToCartBtn"><i class="fa fa-shopping-cart"></i> Add to
+                    Cart</button>
+                </div>
+              </div>
+            </div><!-- End .product-body -->
+          </div><!-- End .product-details-action -->
+
+          <div class="product-details-footer">
+            <div class="product-cat">
+              <span>Category:</span>
+              <a href="#">Women</a>,
+              <a href="#">Dresses</a>,
+              <a href="#">Yellow</a>
+            </div><!-- End .product-cat -->
+
+            <div class="social-icons social-icons-sm">
+              <span class="social-label">Share:</span>
+              <a href="#" class="social-icon" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
+              <a href="#" class="social-icon" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
+              <a href="#" class="social-icon" title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
+              <a href="#" class="social-icon" title="Pinterest" target="_blank"><i class="icon-pinterest"></i></a>
+            </div>
+          </div><!-- End .product-details-footer -->
+        </div><!-- End .product-details -->
+      </div><!-- End .col-md-6 -->
+    </div><!-- End .row -->
+  </div><!-- End .product-details-top -->
+
+  <div class="product-details-tab">
+    <ul class="nav nav-pills justify-content-center" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="product-desc-link" data-toggle="tab" href="#product-desc-tab" role="tab"
+          aria-controls="product-desc-tab" aria-selected="true">Description</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="product-info-link" data-toggle="tab" href="#product-info-tab" role="tab"
+          aria-controls="product-info-tab" aria-selected="false">Additional information</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="product-shipping-link" data-toggle="tab" href="#product-shipping-tab" role="tab"
+          aria-controls="product-shipping-tab" aria-selected="false">Shipping & Returns</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="product-review-link" data-toggle="tab" href="#product-review-tab" role="tab"
+          aria-controls="product-review-tab" aria-selected="false">Reviews (2)</a>
+      </li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane fade show active" id="product-desc-tab" role="tabpanel" aria-labelledby="product-desc-link">
+        <div class="product-desc-content">
+          <h3>Product Information</h3>
+          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis
+            eros. Nullam malesuada erat ut turpis. Suspendisse urna viverra non, semper suscipit, posuere a,
+            pede. Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci.
+            Aenean dignissim pellentesque felis. Phasellus ultrices nulla quis nibh. Quisque a lectus. Donec
+            consectetuer ligula vulputate sem tristique cursus. </p>
+          <ul>
+            <li>Nunc nec porttitor turpis. In eu risus enim. In vitae mollis elit. </li>
+            <li>Vivamus finibus vel mauris ut vehicula.</li>
+            <li>Nullam a magna porttitor, dictum risus nec, faucibus sapien.</li>
+          </ul>
+
+          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis
+            eros. Nullam malesuada erat ut turpis. Suspendisse urna viverra non, semper suscipit, posuere a,
+            pede. Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci.
+            Aenean dignissim pellentesque felis. Phasellus ultrices nulla quis nibh. Quisque a lectus. Donec
+            consectetuer ligula vulputate sem tristique cursus. </p>
+        </div><!-- End .product-desc-content -->
+      </div><!-- .End .tab-pane -->
+      <div class="tab-pane fade" id="product-info-tab" role="tabpanel" aria-labelledby="product-info-link">
+        <div class="product-desc-content">
+          <h3>Information</h3>
+          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis
+            eros. Nullam malesuada erat ut turpis. Suspendisse urna viverra non, semper suscipit, posuere a,
+            pede. Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci.
+          </p>
+
+          <h3>Fabric & care</h3>
+          <ul>
+            <li>Faux suede fabric</li>
+            <li>Gold tone metal hoop handles.</li>
+            <li>RI branding</li>
+            <li>Snake print trim interior </li>
+            <li>Adjustable cross body strap</li>
+            <li> Height: 31cm; Width: 32cm; Depth: 12cm; Handle Drop: 61cm</li>
+          </ul>
+
+          <h3>Size</h3>
+          <p>one size</p>
+        </div><!-- End .product-desc-content -->
+      </div><!-- .End .tab-pane -->
+      <div class="tab-pane fade" id="product-shipping-tab" role="tabpanel" aria-labelledby="product-shipping-link">
+        <div class="product-desc-content">
+          <h3>Delivery & returns</h3>
+          <p>We deliver to over 100 countries around the world. For full details of the delivery options we
+            offer, please view our <a href="#">Delivery information</a><br>
+            We hope you’ll love every purchase, but if you ever need to return an item you can do so within
+            a month of receipt. For full details of how to make a return, please view our <a href="#">Returns
+              information</a></p>
+        </div><!-- End .product-desc-content -->
+      </div><!-- .End .tab-pane -->
+      <div class="tab-pane fade" id="product-review-tab" role="tabpanel" aria-labelledby="product-review-link">
+        <div class="reviews">
+          <h3 class="my-3">Reviews - <span class="avg-rating">{{avg_reviews.avg_rating}}</span>/5 <i
+              class="fa fa-star text-warning"></i>
+            {% if user.is_authenticated %}
+            {% if canAdd %}
+            <button data-toggle="modal" data-target="#productReview" type="button"
+              class="btn btn-warning btn-sm float-right reviewBtn">Add Review</button>
+            {% endif %}
+            {% endif %}
+          </h3>
+          {% if user.is_authenticated %}
+          <!-- Product Review -->
+          <div class="modal fade" id="productReview" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Add Product Review</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form method="post" id="addForm" action="{% url 'save-review' data.id %}">
+                    {% csrf_token %}
+                    <table class="table table-bordered">
+                      {{reviewForm.as_table}}
+                      <tr>
+                        <td colspan="2">
+                          <button type="submit" class="btn btn-primary">Submit</button>
+                          <input type="reset" class="btn btn-dark" value="Reset" id="reset" />
+                        </td>
+                      </tr>
+                    </table>
+                    <p class="ajaxRes"></p>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Product Review End -->
+          {% endif %}
+          <div class="review">
+            <div class="row no-gutters">
+              <div class="col-auto">
+                <h4><a href="#">Samanta J.</a></h4>
+                <div class="ratings-container">
+                  <div class="ratings">
+                    <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
+                  </div><!-- End .ratings -->
+                </div><!-- End .rating-container -->
+                <span class="review-date">6 days ago</span>
+              </div><!-- End .col -->
+              <div class="col">
+                <h4>Good, perfect size</h4>
+
+                <div class="review-content">
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus cum dolores
+                    assumenda asperiores facilis porro reprehenderit animi culpa atque blanditiis
+                    commodi perspiciatis doloremque, possimus, explicabo, autem fugit beatae quae
+                    voluptas!</p>
+                </div><!-- End .review-content -->
+
+                <div class="review-action">
+                  <a href="#"><i class="icon-thumbs-up"></i>Helpful (2)</a>
+                  <a href="#"><i class="icon-thumbs-down"></i>Unhelpful (0)</a>
+                </div><!-- End .review-action -->
+              </div><!-- End .col-auto -->
+            </div><!-- End .row -->
+          </div><!-- End .review -->
+
+        </div><!-- End .reviews -->
+      </div><!-- .End .tab-pane -->
+    </div><!-- End .tab-content -->
+  </div><!-- End .product-details-tab -->
+
+  <h2 class="title text-center mb-4">You May Also Like</h2><!-- End .title text-center -->
+
+  <div class="row">
+    {% for product in related %}
+    <div class="col-lg-3 col-sm-4 mb-4">
+      <div class="card shadow">
+        <a href="{% url 'product_detail' product.slug product.id %}">
+          <img src="{{ product.thumbnail.url }}" class="card-img-top" alt="{{ product.title }}">
+        </a>
+        <div class="card-body">
+          <h6 class="card-text">
+            <a href="{% url 'product_detail' product.slug product.id %}">{{ product.title }}</a>
+          </h6>
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-sm btn-primary"><i class="fa fa-shopping-cart"></i></button>
+          <button class="btn btn-sm btn-danger"><i class="fa fa-heart"></i></button>
+          <span class="float-right">
+            {{ product.get_rating|default:"N/A" }}/5
+            <i class="fa fa-star text-warning"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  </div><!-- End .owl-carousel -->
+  </div><!-- End .container -->
+  </div><!-- End .page-content -->
+</main><!-- End .main -->
+
+{% endblock %}

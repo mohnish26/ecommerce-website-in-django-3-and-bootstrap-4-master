@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Conversion Tools</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #f5f5f5;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 20px;
+      width: 80%;
+    }
+
+    .tool {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .tool:hover {
+      transform: translateY(-5px);
+    }
+
+    .tool i {
+      font-size: 36px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .tool h3 {
+      margin-top: 0;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .tool a {
+      color: #333;
+      text-decoration: none;
+    }
+
+    .tool a:hover {
+      color: #007bff;
+    }
+
+    input[type="file"] {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <input type="file" id="fileInput" onchange="handleFileUpload(event)" multiple>
+  <div class="container" id="toolContainer"></div>
+
+  <script>
+    function handleFileUpload(event) {
+      const files = event.target.files;
+      const toolContainer = document.getElementById('toolContainer');
+      toolContainer.innerHTML = '';
+
+      for (const file of files) {
+        const tool = document.createElement('div');
+        tool.classList.add('tool');
+
+        let icon, title, downloadLink;
+
+        switch (file.type) {
+          case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+          case 'application/msword':
+            icon = '<i class="fas fa-file-word"></i>';
+            title = file.name;  // Use the file name for the title
+            document.title = file.name;  // Set the document title to the file name
+            downloadLink = `<a href="${URL.createObjectURL(file)}" download="${file.name}">Download</a>`;
+            break;
+            
+          case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+          case 'application/vnd.ms-excel':
+            icon = '<i class="fas fa-file-excel"></i>';
+            title = file.name;  // Use the file name for the title
+            document.title = file.name;  // Set the document title to the file name
+            downloadLink = `<a href="${URL.createObjectURL(file)}" download="${file.name}">Download</a>`;
+            break;
+          
+          case 'application/pdf':
+            icon = '<i class="fas fa-file-pdf"></i>';
+            title = file.name;  // Use the file name for the title
+            document.title = file.name;  // Set the document title to the file name
+            downloadLink = `<a href="${URL.createObjectURL(file)}" download="${file.name}">Download</a>`;
+            break;
+          
+          case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+          case 'application/vnd.ms-powerpoint':
+            icon = '<i class="fas fa-file-powerpoint"></i>';
+            title = file.name;  // Use the file name for the title
+            document.title = file.name;  // Set the document title to the file name
+            downloadLink = `<a href="${URL.createObjectURL(file)}" download="${file.name}">Download</a>`;
+            break;
+
+          case 'image/jpeg':
+          case 'image/png':
+          case 'image/gif':
+            icon = '<i class="fas fa-file-image"></i>';
+            title = file.name;  // Use the file name for the title
+            document.title = file.name;  // Set the document title to the file name
+            downloadLink = `<img src="${URL.createObjectURL(file)}" alt="${file.name}">`;
+            break;
+
+          case 'video/mp4':
+          case 'video/webm':
+          case 'video/ogg':
+            icon = '<i class="fas fa-file-video"></i>';
+            title = file.name;  // Use the file name for the title
+            document.title = file.name;  // Set the document title to the file name
+            downloadLink = `<video controls><source src="${URL.createObjectURL(file)}" type="${file.type}">Your browser does not support the video tag.</video>`;
+            break;
+
+          default:
+            icon = '<i class="fas fa-file"></i>';
+            title = file.name;  // Use the file name for the title
+            document.title = file.name;  // Set the document title to the file name
+            downloadLink = `<a href="${URL.createObjectURL(file)}" download="${file.name}">Download</a>`;
+        }
+
+        tool.innerHTML = `
+          ${icon}
+          <h3>${title}</h3>
+          ${downloadLink}
+        `;
+
+        toolContainer.appendChild(tool);
+      }
+    }
+  </script>
+</body>
+</html>

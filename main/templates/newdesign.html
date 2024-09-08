@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        grid-gap: 20px;
+        padding: 20px;
+    }
+    .tool {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+    .tool:hover {
+        transform: translateY(-5px);
+    }
+    .tool i {
+        font-size: 48px;
+        color: #333;
+        margin-bottom: 15px;
+    }
+    .tool h3 {
+        margin: 0 0 15px 0;
+        font-size: 14px;
+        color: #333;
+        text-align: center;
+        word-break: break-word;
+        max-width: 100%;
+    }
+    .tool a {
+        color: #007bff;
+        text-decoration: none;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+    .tool a:hover {
+        text-decoration: underline;
+    }
+    .preview-container {
+        width: 100%;
+        height: 150px;
+        overflow: hidden;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    .preview-frame, .tool img, .tool video {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border: none;
+    }
+    .download-url {
+        font-size: 12px;
+        word-break: break-all;
+        margin-top: 5px;
+        color: #666;
+    }
+</style>
+
+<div class="container" id="toolContainer">
+    {% for image in images %}
+        <div class="tool">
+            {% if image.file_type == 'image' %}
+                <i class="fas fa-file-image"></i>
+                <div class="preview-container">
+                    <img src="{{ image.images.url }}" alt="{{ image.images.name }}" onerror="this.onerror=null;this.parentElement.innerHTML+='<p class=\'file-error\'>Error loading image</p>';">
+                </div>
+            {% elif image.file_type == 'video' %}
+                <i class="fas fa-file-video"></i>
+                <div class="preview-container">
+                    <video controls>
+                        <source src="{{ image.images.url }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            {% elif image.file_type == 'audio' %}
+                <i class="fas fa-file-audio"></i>
+                <audio controls>
+                    <source src="{{ image.images.url }}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            {% elif image.file_type == 'pdf' %}
+                <i class="fas fa-file-pdf"></i>
+                <div class="preview-container">
+                    <iframe src="{{ image.images.url }}" width="100%" height="100%"></iframe>
+                </div>
+            {% elif image.file_type == 'word' %}
+                <i class="fas fa-file-word"></i>
+            {% elif image.file_type == 'excel' %}
+                <i class="fas fa-file-excel"></i>
+            {% elif image.file_type == 'powerpoint' %}
+                <i class="fas fa-file-powerpoint"></i>
+            {% else %}
+                <i class="fas fa-file"></i>
+            {% endif %}
+            <h3>{{ product.title }}</h3>
+            <a href="{{ image.images.url }}" class="download-link" download>Download</a>
+        </div>
+    {% empty %}
+        <p>No files available.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}
